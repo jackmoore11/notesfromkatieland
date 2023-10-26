@@ -58,6 +58,9 @@ def resendConfirmation():
     form = ResendConfirmationForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
+        if user.confirmed:
+            flash('Account already confirmed. Please log in.', 'info')
+            return redirect(url_for('users.login'))
         sendConfEmail(user)
         flash('Confirmation email sent!', 'success')
         return redirect(url_for('users.inactive'))
