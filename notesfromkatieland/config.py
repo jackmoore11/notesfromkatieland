@@ -1,4 +1,3 @@
-import os
 import json
 
 with open('/etc/notesfromkatielandconfig.json') as config_file:
