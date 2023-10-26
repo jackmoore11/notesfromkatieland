@@ -1,5 +1,5 @@
 from datetime import timedelta
-from flask import render_template, url_for, flash, redirect, request, Blueprint
+from flask import render_template, url_for, flash, redirect, request, session, Blueprint
 from flask_login import login_user, logout_user, current_user, login_required
 from notesfromkatieland import db, bcrypt
 from notesfromkatieland.models import User, Post
@@ -19,6 +19,7 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=hashedPassword)
         db.session.add(user)
         db.session.commit()
+        session.clear()
         sendConfEmail(user)
         flash('Account created! Please confirm your email.', 'success')
         return redirect(url_for('users.inactive'))
