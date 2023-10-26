@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+
+*.db
+
+profile_pics/
+website_pics/
