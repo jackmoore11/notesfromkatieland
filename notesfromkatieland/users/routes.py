@@ -21,7 +21,7 @@ def register():
         db.session.commit()
         flash('Account created. Please log in.', 'success')
         return redirect(url_for('users.login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='TestRegister', form=form)
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():
