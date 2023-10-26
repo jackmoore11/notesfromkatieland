@@ -19,6 +19,7 @@ for name, email in userData.items():
     if email not in currentEmails:
         allowedUser = AllowedUser(name=name, email=email)
         db.session.add(allowedUser)
+        print(f'Added {name} to database')
     else:
         print(f'{name} already in database')
 
