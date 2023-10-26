@@ -3,8 +3,8 @@ from flask import render_template, url_for, flash, redirect, request, Blueprint
 from flask_login import login_user, logout_user, current_user, login_required
 from notesfromkatieland import db, bcrypt
 from notesfromkatieland.models import User, Post
-from notesfromkatieland.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, RequestResetForm, ResetPasswordForm
-from notesfromkatieland.users.utils import savePicture, sendResetEmail
+from notesfromkatieland.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, ResendConfirmationForm, RequestResetForm, ResetPasswordForm
+from notesfromkatieland.users.utils import savePicture, sendConfEmail, sendResetEmail
 
 users = Blueprint('users', __name__)
 
@@ -19,9 +19,49 @@ def register():
         user = User(username=form.username.data, email=form.email.data, password=hashedPassword)
         db.session.add(user)
         db.session.commit()
-        flash('Account created. Please log in.', 'success')
-        return redirect(url_for('users.login'))
+        sendConfEmail(user)
+        flash('Account created! Please confirm your email.', 'success')
+        return redirect(url_for('users.inactive'))
     return render_template('register.html', title='Register', form=form)
+
+@users.route('/confirm/<token>')
+def confirm(token):
+    if current_user.is_authenticated:
+        return redirect(url_for('users.testimonials'))
+    
+    user = User.verifyToken(token)
+    if user is None:
+        flash('That is an invalid or expired token.', 'warning')
+        return redirect(url_for('users.inactive'))
+    elif user.confirmed:
+        flash('Account already confirmed. Please log in.', 'info')
+        return redirect(url_for('users.login'))
+    else:
+        user.confirmed = True
+        db.session.commit()
+        flash('Email confirmed! Please log in.', 'success')
+        return redirect(url_for('users.login'))
+    
+@users.route('/inactive')
+def inactive():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.testimonials'))
+    
+    return render_template('inactive.html', title='Inactive User')
+
+@users.route('/resendConfirmation', methods=['GET', 'POST'])
+def resendConfirmation():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.testimonials'))
+    
+    form = ResendConfirmationForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+        sendConfEmail(user)
+        flash('Confirmation email sent!', 'success')
+        return redirect(url_for('users.inactive'))
+    
+    return render_template('resendConfirmation.html', title='Resend Confirmation', form=form)
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():
@@ -32,6 +72,9 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
+            if not user.confirmed:
+                flash('Your email has not been confirmed.', 'danger')
+                return redirect(url_for('users.inactive'))
             login_user(user, remember=form.remember.data, duration=timedelta(days=1))
             nextPage = request.args.get('next')
             if nextPage:
@@ -93,7 +136,7 @@ def resetToken(token):
     if current_user.is_authenticated:
         return redirect(url_for('main.testimonials'))
     
-    user = User.verifyResetToken(token)
+    user = User.verifyToken(token)
     if user is None:
         flash('That is an invalid or expired token.', 'warning')
         return redirect(url_for('users.resetRequest'))

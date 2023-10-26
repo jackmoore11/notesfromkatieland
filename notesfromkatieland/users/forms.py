@@ -54,6 +54,15 @@ class UpdateAccountForm(FlaskForm):
             if emailAllowed is None:
                 raise ValidationError('Email is not on the list of allowed users.')
             
+class ResendConfirmationForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Submit')
+
+    def validate_email(self, email):
+        emailExists = User.query.filter_by(email=email.data).first()
+        if emailExists is None:
+            raise ValidationError('There is no account with that email.')
+            
 class RequestResetForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Request Password Reset')

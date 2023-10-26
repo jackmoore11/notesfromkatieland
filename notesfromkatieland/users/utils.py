@@ -18,8 +18,18 @@ def savePicture(formPicture):
 
     return fname
 
+def sendConfEmail(user):
+    token = user.getToken()
+    msg = Message('Confirm your account on notesfromkatieland.com', sender='noreply@notesfromkatieland.com', recipients=[user.email])
+    msg.body = f'''Thank you for registering! To confirm your account, please vist the following link:
+{url_for('users.confirm', token=token, _external=True)}
+
+If you did not create an account, ignore this email and no changes will be made.
+'''
+    mail.send(msg)
+
 def sendResetEmail(user):
-    token = user.getResetToken()
+    token = user.getToken()
     msg = Message('Password Reset Request for notesfromkatieland.com', sender='noreply@notesfromkatieland.com', recipients=[user.email])
     msg.body = f'''To reset your password, visit the following link:
 {url_for('users.resetToken', token=token, _external=True)}
