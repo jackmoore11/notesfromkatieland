@@ -27,7 +27,7 @@ def register():
 @users.route('/confirm/<token>')
 def confirm(token):
     if current_user.is_authenticated:
-        return redirect(url_for('users.testimonials'))
+        return redirect(url_for('main.testimonials'))
     
     user = User.verifyToken(token)
     if user is None:
