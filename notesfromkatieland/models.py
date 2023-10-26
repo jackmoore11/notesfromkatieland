@@ -14,14 +14,15 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), unique=True, nullable=False)
     imageFile = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    confirmed = db.Column(db.Boolean, nullable=False, default=False)
     posts = db.relationship('Post', backref='author', lazy=True)
 
-    def getResetToken(self, expiresSeconds=1800):
+    def getToken(self, expiresSeconds=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expiresSeconds)
         return s.dumps({'userID': self.id}).decode('utf-8')
     
     @staticmethod
-    def verifyResetToken(token):
+    def verifyToken(token):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             userID = s.loads(token)['userID']
