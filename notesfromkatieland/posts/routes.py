@@ -39,12 +39,9 @@ def updatePost(postID):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
-        print(form.picture.data)
         if form.picture.data:
             imageFilename = savePicture(form.picture.data)
-            print(imageFilename)
             post.imageFile = imageFilename
-        print(post.title, post.content, post.imageFile)
         db.session.commit()
         flash('Post updated!', 'success')
         return redirect(url_for('posts.post', postID=post.id))
