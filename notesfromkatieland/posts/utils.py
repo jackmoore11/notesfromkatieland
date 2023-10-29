@@ -1,6 +1,6 @@
 import os
 import secrets
-from PIL import Image
+from PIL import Image, ImageOps
 from flask import current_app
 
 def savePicture(formPicture):
@@ -11,6 +11,7 @@ def savePicture(formPicture):
 
     outputSize = (500, 500)
     img = Image.open(formPicture)
+    img = ImageOps.exif_transpose(img)
     img.thumbnail(outputSize)
     img.save(fpath)
 
