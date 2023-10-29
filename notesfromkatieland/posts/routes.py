@@ -3,6 +3,7 @@ from flask_login import current_user, login_required
 from notesfromkatieland import db
 from notesfromkatieland.models import Post
 from notesfromkatieland.posts.forms import PostForm
+from notesfromkatieland.posts.utils import savePicture
 
 posts = Blueprint('posts', __name__)
 
@@ -12,6 +13,9 @@ def newPost():
     form = PostForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        if form.picture.data:
+            imageFilename = savePicture(form.picture.data)
+            post.imageFile = imageFilename
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -35,6 +39,9 @@ def updatePost(postID):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        if form.picture.data:
+            imageFilename = savePicture(form.picture.data)
+            post.imageFile = imageFilename
         db.session.commit()
         flash('Post updated!', 'success')
         return redirect(url_for('posts.post', postID=post.id))

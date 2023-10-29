@@ -5,5 +5,6 @@ __pycache__/
 
 profile_pics/
 website_pics/
+post_pics/
 
 AllowedUsers.json
