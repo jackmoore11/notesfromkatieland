@@ -38,10 +38,11 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False)
     datePosted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
+    imageFile = db.Column(db.String(20), nullable=True, default=None)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.datePosted}')"
+        return f"Post('{self.title}', '{self.datePosted}', '{self.imageFile}')"
     
 class AllowedUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)

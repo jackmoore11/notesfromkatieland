@@ -15,6 +15,11 @@
             </div>
             <h2 class="article-title">{{ post.title }}</h2>
             <p class="article-content">{{ post.content }}</p>
+            {% if post.imageFile %}
+                <div class="text-center">
+                    <img class="img-thumbnail" src="{{ url_for('static', filename='post_pics/' + post.imageFile) }}">
+                </div>
+            {% endif %}
         </div>
     </article>
     
