@@ -1,6 +1,6 @@
 import os
 import secrets
-from PIL import Image
+from PIL import Image, ImageOps
 from flask import url_for, current_app
 from flask_mail import Message
 from notesfromkatieland import mail
@@ -13,6 +13,7 @@ def savePicture(formPicture):
 
     outputSize = (125, 125)
     img = Image.open(formPicture)
+    img = ImageOps.exif_transpose(img)
     img.thumbnail(outputSize)
     img.save(fpath)
 
