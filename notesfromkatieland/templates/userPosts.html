@@ -11,6 +11,11 @@
                 </div>
                 <h2><a class="article-title" href="{{ url_for('posts.post', postID=post.id) }}">{{ post.title }}</a></h2>
                 <p class="article-content">{{ post.content }}</p>
+                {% if post.imageFile %}
+                    <div class="text-center">
+                        <img class="img-thumbnail" src="{{ url_for('static', filename='post_pics/' + post.imageFile) }}">
+                    </div>
+                {% endif %}
             </div>
         </article>
     {% endfor %}
