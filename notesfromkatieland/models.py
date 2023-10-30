@@ -16,6 +16,7 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(60), nullable=False)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
     posts = db.relationship('Post', backref='author', lazy=True)
+    videos = db.relationship('Video', backref='author', lazy=True)
 
     def getToken(self, expiresSeconds=1800):
         s = Serializer(current_app.config['SECRET_KEY'], expiresSeconds)
@@ -43,6 +44,16 @@ class Post(db.Model):
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.datePosted}', '{self.imageFile}')"
+    
+class Video(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    datePosted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    videoFile = db.Column(db.String(20), nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Video('{self.title}', '{self.datePosted}', '{self.videoFile}')"
     
 class AllowedUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
