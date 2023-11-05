@@ -6,5 +6,6 @@ __pycache__/
 profile_pics/
 website_pics/
 post_pics/
+notesfromkatieland/static/videos/
 
 AllowedUsers.json
