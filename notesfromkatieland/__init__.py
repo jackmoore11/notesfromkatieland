@@ -23,10 +23,12 @@ def createApp(configClass=Config):
 
     from notesfromkatieland.users.routes import users
     from notesfromkatieland.posts.routes import posts
+    from notesfromkatieland.videos.routes import videos
     from notesfromkatieland.main.routes import main
     from notesfromkatieland.errors.handlers import errors
     app.register_blueprint(users)
     app.register_blueprint(posts)
+    app.register_blueprint(videos)
     app.register_blueprint(main)
     app.register_blueprint(errors)
 

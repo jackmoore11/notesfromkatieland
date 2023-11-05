@@ -2,7 +2,7 @@ from datetime import timedelta
 from flask import render_template, url_for, flash, redirect, request, session, Blueprint
 from flask_login import login_user, logout_user, current_user, login_required
 from notesfromkatieland import db, bcrypt
-from notesfromkatieland.models import User, Post
+from notesfromkatieland.models import User, Post, Video
 from notesfromkatieland.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, ResendConfirmationForm, RequestResetForm, ResetPasswordForm
 from notesfromkatieland.users.utils import savePicture, sendConfEmail, sendResetEmail
 
@@ -113,13 +113,21 @@ def account():
     imageFile = url_for('static', filename=f'profile_pics/{current_user.imageFile}')
     return render_template('account.html', title='Account', imageFile=imageFile, form=form)
 
-@users.route('/user/<string:username>')
+@users.route('/user/<string:username>/posts')
 @login_required
 def userPosts(username):
     page = request.args.get('page', 1, type=int)
     user = User.query.filter_by(username=username).first_or_404()
     posts = Post.query.filter_by(author=user).order_by(Post.datePosted.desc()).paginate(page=page, per_page=5)
     return render_template('userPosts.html', posts=posts, user=user)
+
+@users.route('/user/<string:username>/videos')
+@login_required
+def userVideos(username):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(username=username).first_or_404()
+    videos = Video.query.filter_by(author=user).order_by(Video.datePosted.desc()).paginate(page=page, per_page=5)
+    return render_template('userVideos.html', videos=videos, user=user)
 
 @users.route('/resetPassword', methods=['GET', 'POST'])
 def resetRequest():

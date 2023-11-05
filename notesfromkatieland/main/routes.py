@@ -1,6 +1,6 @@
 from flask import render_template, request, Blueprint
 from flask_login import login_required
-from notesfromkatieland.models import Post
+from notesfromkatieland.models import Post, Video
 
 main = Blueprint('main', __name__)
 
@@ -15,7 +15,9 @@ def testimonials():
 @main.route('/videos')
 @login_required
 def videos():
-    return render_template('videos.html', title='Videos')
+    page = request.args.get('page', 1, type=int)
+    videos = Video.query.order_by(Video.datePosted.desc()).paginate(page=page, per_page=5)
+    return render_template('videos.html', title='Videos', videos=videos)
 
 @main.route('/games')
 @login_required

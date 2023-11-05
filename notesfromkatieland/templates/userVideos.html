@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
+    <h1 class="mb-3">Videos by {{ user.username }}</h1>
     {% for video in videos.items %}
         <article class="media content-section">
             <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + video.author.imageFile) }}">
@@ -20,9 +21,9 @@
     {% for pageNum in videos.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
         {% if pageNum %}
             {% if pageNum == videos.page %}
-                <a class="btn btn-info mb-4" href="{{ url_for('main.videos', page=pageNum) }}">{{ pageNum }}</a>
+                <a class="btn btn-info mb-4" href="{{ url_for('users.userVideos', username=user.username, page=pageNum) }}">{{ pageNum }}</a>
             {% else %}
-                <a class="btn btn-outline-info mb-4" href="{{ url_for('main.videos', page=pageNum) }}">{{ pageNum }}</a>
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('users.userVideos', username=user.username, page=pageNum) }}">{{ pageNum }}</a>
             {% endif %}
         {% else %}
             ...
