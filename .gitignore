@@ -3,9 +3,10 @@ __pycache__/
 
 *.db
 
-profile_pics/
-website_pics/
-post_pics/
-notesfromkatieland/static/videos/
+profile_pics/*
+website_pics/*
+post_pics/*
+notesfromkatieland/static/videos/*
+notesfromkatieland/static/videos/tmp/*
 
 AllowedUsers.json
