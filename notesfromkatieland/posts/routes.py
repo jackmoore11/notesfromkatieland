@@ -1,7 +1,7 @@
 from flask import render_template, url_for, flash, redirect, request, abort, Blueprint
 from flask_login import current_user, login_required
 from notesfromkatieland import db
-from notesfromkatieland.models import Post
+from notesfromkatieland.models import Post, Picture
 from notesfromkatieland.posts.forms import PostForm
 from notesfromkatieland.posts.utils import savePicture
 
@@ -13,9 +13,11 @@ def newPost():
     form = PostForm()
     if form.validate_on_submit():
         post = Post(title=form.title.data, content=form.content.data, author=current_user)
-        if form.picture.data:
-            imageFilename = savePicture(form.picture.data)
-            post.imageFile = imageFilename
+        for formPicture in form.pictures.data:
+            if formPicture:
+                filename = savePicture(formPicture)
+                picture = Picture(filename=filename, parentPost=post)
+                db.session.add(picture)
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
@@ -39,9 +41,11 @@ def updatePost(postID):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
-        if form.picture.data:
-            imageFilename = savePicture(form.picture.data)
-            post.imageFile = imageFilename
+        for formPicture in form.pictures.data:
+            if formPicture:
+                filename = savePicture(formPicture)
+                picture = Picture(filename=filename, parentPost=post)
+                db.session.add(picture)
         db.session.commit()
         flash('Post updated!', 'success')
         return redirect(url_for('posts.post', postID=post.id))

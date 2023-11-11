@@ -15,11 +15,11 @@
             </div>
             <h2 class="article-title">{{ post.title }}</h2>
             <p class="article-content">{{ post.content }}</p>
-            {% if post.imageFile %}
+            {% for picture in post.pictures %}
                 <div class="text-center">
-                    <img class="img-thumbnail" src="{{ url_for('static', filename='post_pics/' + post.imageFile) }}">
+                    <img class="img-thumbnail mb-2" src="{{ url_for('static', filename='post_pics/' + picture.filename) }}">
                 </div>
-            {% endif %}
+            {% endfor %}
         </div>
     </article>
     
