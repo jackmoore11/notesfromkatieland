@@ -61,6 +61,10 @@ def deletePost(postID):
     if post.author != current_user:
         abort(403)
 
+    postPics = Picture.query.filter_by(parentPost=post).all()
+    for pic in postPics:
+        db.session.delete(pic)
+
     db.session.delete(post)
     db.session.commit()
     flash('Post deleted.', 'success')

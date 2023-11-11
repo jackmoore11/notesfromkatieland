@@ -43,7 +43,7 @@ class Post(db.Model):
     pictures = db.relationship('Picture', backref='parentPost', lazy=True)
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.datePosted}', '{self.imageFile}')"
+        return f"Post('{self.title}', '{self.datePosted}')"
     
 class Picture(db.Model):
     id = db.Column(db.Integer, primary_key=True)
