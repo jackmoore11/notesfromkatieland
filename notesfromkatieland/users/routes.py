@@ -16,7 +16,7 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashedPassword = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=form.email.data, password=hashedPassword)
+        user = User(username=form.username.data, email=str.lower(form.email.data), password=hashedPassword)
         db.session.add(user)
         db.session.commit()
         session.clear()
@@ -74,7 +74,7 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(email=form.email.data).first()
+        user = User.query.filter_by(email=str.lower(form.email.data)).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             if not user.confirmed:
                 flash('Your email has not been confirmed.', 'danger')
