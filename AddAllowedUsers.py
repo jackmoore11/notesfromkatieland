@@ -16,8 +16,8 @@ userData = json.load(f)
 f.close()
 
 for name, email in userData.items():
-    if email not in currentEmails:
-        allowedUser = AllowedUser(name=name, email=email)
+    if str.lower(email) not in currentEmails:
+        allowedUser = AllowedUser(name=name, email=str.lower(email))
         db.session.add(allowedUser)
         print(f'Added {name} to database')
     else:
