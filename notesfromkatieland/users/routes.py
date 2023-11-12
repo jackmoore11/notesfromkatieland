@@ -103,7 +103,7 @@ def account():
             imageFilename = savePicture(form.picture.data)
             current_user.imageFile = imageFilename
         current_user.username = form.username.data
-        current_user.email = form.email.data
+        current_user.email = str.lower(form.email.data)
         db.session.commit()
         flash('Your account information has been updated!', 'success')
         return redirect(url_for('users.account'))

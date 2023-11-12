@@ -46,11 +46,11 @@ class UpdateAccountForm(FlaskForm):
     
     def validate_email(self, email):
         if email.data != current_user.email:
-            emailExists = User.query.filter_by(email=email.data).first()
+            emailExists = User.query.filter_by(email=str.lower(email.data)).first()
             if emailExists:
                 raise ValidationError('Email is taken.')
             
-            emailAllowed = AllowedUser.query.filter_by(email=email.data).first()
+            emailAllowed = AllowedUser.query.filter_by(email=str.lower(email.data)).first()
             if emailAllowed is None:
                 raise ValidationError('Email is not on the list of allowed users.')
             
