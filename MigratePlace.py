@@ -13,6 +13,7 @@ for user in users:
         userData = AllowedUser.query.filter_by(email=user.email).first()
         user.location = userData.placeDefault
         print(f'Updated user with email {user.email} to location {user.location}.')
+db.session.commit()
 
 posts = Post.query.all()
 for post in posts:
@@ -20,6 +21,7 @@ for post in posts:
     if post.location == 'xxxx':
         post.location = post.author.location
         print(f'Updated post with title {post.title} to location {post.location}.')
+db.session.commit()
 
 videos = Video.query.all()
 for video in videos:
@@ -27,5 +29,4 @@ for video in videos:
     if video.location == 'xxxx':
         video.location = video.author.location
         print(f'Updated video with title {video.title} to location {video.location}.')
-
 db.session.commit()
