@@ -12,7 +12,7 @@ posts = Blueprint('posts', __name__)
 def newPost():
     form = PostForm()
     if form.validate_on_submit():
-        post = Post(title=form.title.data, content=form.content.data, author=current_user)
+        post = Post(title=form.title.data, content=form.content.data, location=form.location.data, author=current_user)
         for formPicture in form.pictures.data:
             if formPicture:
                 filename = savePicture(formPicture)
@@ -21,7 +21,8 @@ def newPost():
         db.session.add(post)
         db.session.commit()
         flash('Your post has been created!', 'success')
-        return redirect(url_for('main.testimonials'))
+        return redirect(url_for('main.placeTestimonials', place=form.location.data))
+    form.location.data = current_user.location.replace('_', ' ')
     return render_template('newPost.html', title='New Post', form=form, legend='New Post')
 
 @posts.route('/post/<int:postID>')
@@ -41,6 +42,7 @@ def updatePost(postID):
     if form.validate_on_submit():
         post.title = form.title.data
         post.content = form.content.data
+        post.location = form.location.data
         for formPicture in form.pictures.data:
             if formPicture:
                 filename = savePicture(formPicture)
@@ -50,6 +52,7 @@ def updatePost(postID):
         flash('Post updated!', 'success')
         return redirect(url_for('posts.post', postID=post.id))
     elif request.method == 'GET':
+        form.location.data = post.location.replace('_', ' ')
         form.title.data = post.title
         form.content.data = post.content
     return render_template('newPost.html', title='Update Post', form=form, legend='Update Post')
@@ -68,4 +71,4 @@ def deletePost(postID):
     db.session.delete(post)
     db.session.commit()
     flash('Post deleted.', 'success')
-    return redirect(url_for('main.testimonials'))
+    return redirect(url_for('main.placeTestimonials', place=post.location))
