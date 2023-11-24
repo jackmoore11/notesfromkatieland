@@ -8,21 +8,20 @@ db.create_all()
 VALID_LOCATIONS = ['New_York', 'Milwaukee', 'Madison', 'Chicago']
 
 users = User.query.all()
-posts = Post.query.all()
-videos = Video.query.all()
-
 for user in users:
     if user.location == 'xxxx':
         userData = AllowedUser.query.filter_by(email=user.email).first()
         user.location = userData.placeDefault
         print(f'Updated user with email {user.email} to location {user.location}.')
 
+posts = Post.query.all()
 for post in posts:
     assert post.author.location in VALID_LOCATIONS, 'Author has an invalid location'
     if post.location == 'xxxx':
         post.location = post.author.location
         print(f'Updated post with title {post.title} to location {post.location}.')
 
+videos = Video.query.all()
 for video in videos:
     assert video.author.location in VALID_LOCATIONS, 'Author has an invalid location'
     if video.location == 'xxxx':
