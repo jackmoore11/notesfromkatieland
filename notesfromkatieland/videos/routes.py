@@ -13,11 +13,12 @@ def newVideo():
     form = VideoForm()
     if form.validate_on_submit():
         videoFilename = saveVideo(form.video.data)
-        video = Video(title=form.title.data, videoFile=videoFilename, author=current_user)
+        video = Video(title=form.title.data, videoFile=videoFilename, author=current_user, location=form.location.data)
         db.session.add(video)
         db.session.commit()
         flash('Your video has been created!', 'success')
-        return redirect(url_for('main.videos'))
+        return redirect(url_for('main.placeVideos', place=form.location.data))
+    form.location.data = current_user.location.replace('_', ' ')
     return render_template('newVideo.html', title='New Video', form=form, legend='New Video')
 
 @videos.route('/video/<int:videoID>')
@@ -37,10 +38,12 @@ def updateVideo(videoID):
     if form.validate_on_submit():
         video.title = form.title.data
         video.videoFile = saveVideo(form.video.data)
+        video.location = form.location.data
         db.session.commit()
         flash('Video updated!', 'success')
         return redirect(url_for('videos.video', videoID=video.id))
     elif request.method == 'GET':
+        form.location.data = video.location.replace('_', ' ')
         form.title.data = video.title
         form.video.data = video.videoFile
     return render_template('newVideo.html', title='Update Video', form=form, legend='Update Video')
@@ -55,4 +58,4 @@ def deleteVideo(videoID):
     db.session.delete(video)
     db.session.commit()
     flash('Video deleted.', 'success')
-    return redirect(url_for('main.videos'))
+    return redirect(url_for('main.placeVideos', place=video.location))
