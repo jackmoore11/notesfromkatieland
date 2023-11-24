@@ -10,11 +10,11 @@
                 </div>
                 <h2><a class="article-title" href="{{ url_for('posts.post', postID=post.id) }}">{{ post.title }}</a></h2>
                 <p class="article-content">{{ post.content }}</p>
-                {% if post.pictures %}
-                    <small class="text-muted">
-                        <a href="{{ url_for('posts.post', postID=post.id) }}">See more</a>
-                    </small>
-                {% endif %}
+                {% for picture in post.pictures %}
+                    <div class="text-center">
+                        <img class="img-thumbnail mb-2" src="{{ url_for('static', filename='post_pics/' + picture.filename) }}">
+                    </div>
+                {% endfor %}
             </div>
         </article>
     {% endfor %}
