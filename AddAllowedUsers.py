@@ -15,12 +15,14 @@ f = open('AllowedUsers.json')
 userData = json.load(f)
 f.close()
 
-for name, email in userData.items():
-    if str.lower(email) not in currentEmails:
-        allowedUser = AllowedUser(name=name, email=str.lower(email))
+for name, info in userData.items():
+    if str.lower(info[0]) not in currentEmails:
+        allowedUser = AllowedUser(name=name, email=str.lower(info[0]), placeDefault=info[1])
         db.session.add(allowedUser)
-        print(f'Added {name} to database')
+        print(f'Added {name} to database.')
     else:
-        print(f'{name} already in database')
+        allowedUser = AllowedUser.query.filter_by(email=str.lower(info[0])).first()
+        allowedUser.placeDefault = info[1]
+        print(f'{name} already in database. Updated location.')
 
 db.session.commit()

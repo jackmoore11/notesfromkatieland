@@ -1,0 +1,9 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>{{ opt }} From Katieland</h1>
+    <h2>Choose Your Adventure!</h2>
+    <h3><a href="{{ url_for(route, place='New_York') }}">New York</a></h3>
+    <h3><a href="{{ url_for(route, place='Milwaukee') }}">Milwaukee</a></h3>
+    <h3><a href="{{ url_for(route, place='Madison') }}">Madison</a></h3>
+    <h3><a href="{{ url_for(route, place='Chicago') }}">Chicago</a></h3>
+{% endblock content %}

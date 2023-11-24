@@ -2,7 +2,7 @@ from datetime import timedelta
 from flask import render_template, url_for, flash, redirect, request, session, Blueprint
 from flask_login import login_user, logout_user, current_user, login_required
 from notesfromkatieland import db, bcrypt
-from notesfromkatieland.models import User, Post, Video
+from notesfromkatieland.models import User, Post, Video, AllowedUser
 from notesfromkatieland.users.forms import RegistrationForm, LoginForm, UpdateAccountForm, ResendConfirmationForm, RequestResetForm, ResetPasswordForm
 from notesfromkatieland.users.utils import savePicture, sendConfEmail, sendResetEmail
 
@@ -15,8 +15,9 @@ def register():
 
     form = RegistrationForm()
     if form.validate_on_submit():
+        userData = AllowedUser.query.filter_by(email=str.lower(form.email.data)).first()
         hashedPassword = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
-        user = User(username=form.username.data, email=str.lower(form.email.data), password=hashedPassword)
+        user = User(username=form.username.data, email=str.lower(form.email.data), password=hashedPassword, location=userData.placeDefault)
         db.session.add(user)
         db.session.commit()
         session.clear()

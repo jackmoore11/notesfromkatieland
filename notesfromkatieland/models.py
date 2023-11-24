@@ -15,6 +15,7 @@ class User(db.Model, UserMixin):
     imageFile = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    location = db.Column(db.String(20), unique=False, nullable=False)
     posts = db.relationship('Post', backref='author', lazy=True)
     videos = db.relationship('Video', backref='author', lazy=True)
 
@@ -39,6 +40,7 @@ class Post(db.Model):
     title = db.Column(db.String(100), nullable=False)
     datePosted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
+    location = db.Column(db.String(20), unique=False, nullable=False)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     pictures = db.relationship('Picture', backref='parentPost', lazy=True)
 
@@ -58,6 +60,7 @@ class Video(db.Model):
     title = db.Column(db.String(100), nullable=False)
     datePosted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     videoFile = db.Column(db.String(20), nullable=False)
+    location = db.Column(db.String(20), unique=False, nullable=False)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
@@ -67,6 +70,7 @@ class AllowedUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
+    placeDefault = db.Column(db.String(20), unique=False, nullable=False)
 
     def __repr__(self):
         return f"AllowedUser('{self.name}', '{self.email}')"
