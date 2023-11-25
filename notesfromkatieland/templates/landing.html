@@ -2,8 +2,29 @@
 {% block content %}
     <h1>{{ opt }} From Katieland</h1>
     <h2>Choose Your Adventure!</h2>
-    <h3><a href="{{ url_for(route, place='New_York') }}">New York</a></h3>
-    <h3><a href="{{ url_for(route, place='Milwaukee') }}">Milwaukee</a></h3>
-    <h3><a href="{{ url_for(route, place='Madison') }}">Madison</a></h3>
-    <h3><a href="{{ url_for(route, place='Chicago') }}">Chicago</a></h3>
+    <div class="row">
+        <div class="col">
+            <a href="{{ url_for(route, place='New_York') }}">
+                <img class="img-thumbnail mb-2" src="{{ url_for('static', filename='website_pics/nycSmall.jpg') }}">
+            </a>
+        </div>
+        <div class="col">
+            <a href="{{ url_for(route, place='Milwaukee') }}">
+                <img class="img-thumbnail mb-2" src="{{ url_for('static', filename='website_pics/mkeSmall.jpg') }}">
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <a href="{{ url_for(route, place='Madison') }}">
+                <img class="img-thumbnail mb-2" src="{{ url_for('static', filename='website_pics/madSmall.jpg') }}">
+            </a>
+        </div>
+        <div class="col">
+            <a href="{{ url_for(route, place='Chicago') }}">
+                <img class="img-thumbnail mb-2" src="{{ url_for('static', filename='website_pics/chiSmall.jpg') }}">
+            </a>
+        </div>
+    </div>
+    
 {% endblock content %}
